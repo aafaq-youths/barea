@@ -871,11 +871,6 @@ function resizeImageForUpload(file, maxDim, quality, cb){
   if(!wrap || !form || !submissionInput) return;
 
   var submitBtn = form.querySelector('.form-submit');
-  var endpoint = 'https://script.google.com/macros/s/AKfycbylsyYxkZJxwFx8vqIcOCi-i_3lMEDIOorS6j_jtlI-_2jIOfOeIGxgF7Mr_Vg5A-rvEg/exec';
-  var activeSubmissionId = '';
-  var pollCount = 0;
-  var maxPolls = 40;
-  var pollTimer = null;
 
   function setSending(sending){
     if(!submitBtn) return;
@@ -929,77 +924,6 @@ function resizeImageForUpload(file, maxDim, quality, cb){
       + Math.random().toString(36).slice(2,9).toUpperCase();
   }
 
-  function cleanupJsonp(script, callbackName){
-    if(script && script.parentNode) script.parentNode.removeChild(script);
-    try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
-  }
-
-  function pollStatus(){
-    if(!activeSubmissionId) return;
-
-    pollCount++;
-    var callbackName = 'bareeReportStatus_' + Date.now() + '_' + pollCount;
-    var script = document.createElement('script');
-
-    window[callbackName] = function(data){
-      cleanupJsonp(script, callbackName);
-
-      if(!activeSubmissionId || !data) return;
-
-      if(data.state === 'success' && data.ok){
-        clearTimeout(pollTimer);
-        setSending(false);
-
-        form.reset();
-        submissionInput.value = '';
-        resetPhotoFields();
-        status.classList.remove('show');
-        activeSubmissionId = '';
-
-        showSuccess();
-        return;
-      }
-
-      if(data.state === 'error' || data.ok === false){
-        clearTimeout(pollTimer);
-        setSending(false);
-        showStatus(data.message || 'تعذر حفظ التقرير. يرجى المحاولة مرة أخرى.');
-        activeSubmissionId = '';
-        return;
-      }
-
-      if(pollCount >= maxPolls){
-        setSending(false);
-        showStatus('تم إرسال البيانات ولكن تعذر تأكيد الحفظ حتى الآن. يرجى المحاولة مرة أخرى بعد قليل.');
-        activeSubmissionId = '';
-        return;
-      }
-
-      pollTimer = setTimeout(pollStatus, 1000);
-    };
-
-    script.onerror = function(){
-      cleanupJsonp(script, callbackName);
-
-      if(pollCount >= maxPolls){
-        setSending(false);
-        showStatus('تعذر الاتصال بخدمة تأكيد الحفظ. يرجى المحاولة مرة أخرى.');
-        activeSubmissionId = '';
-        return;
-      }
-
-      pollTimer = setTimeout(pollStatus, 1300);
-    };
-
-    script.src = endpoint
-      + '?action=status'
-      + '&submissionId=' + encodeURIComponent(activeSubmissionId)
-      + '&callback=' + encodeURIComponent(callbackName)
-      + '&_=' + Date.now();
-
-    document.head.appendChild(script);
-  }
-
   function missingPhotos(){
     var missing = [];
     [1,2,3,4].forEach(function(idx){
@@ -1025,16 +949,22 @@ function resizeImageForUpload(file, maxDim, quality, cb){
       return;
     }
 
-    activeSubmissionId = makeSubmissionId();
-    submissionInput.value = activeSubmissionId;
-    pollCount = 0;
+    submissionInput.value = makeSubmissionId();
 
     status.classList.remove('show');
     setSending(true);
 
-    // نبدأ التحقق بعد لحظة قصيرة حتى يصل POST أولًا (قد يستغرق إرسال الصور وقتًا أطول).
-    clearTimeout(pollTimer);
-    pollTimer = setTimeout(pollStatus, 1500);
+    // النموذج يُرسل الآن بشكل طبيعي إلى reportSubmitFrame (دون انتظار تأكيد من الخادم).
+    // نعرض شاشة النجاح مباشرة بعد إرسال الطلب، لأن رفع الصور قد يستغرق وقتًا
+    // أطول من مدة انتظار معقولة للزائر، والحفظ الفعلي يستمر في الخلفية.
+    window.setTimeout(function(){
+      setSending(false);
+      form.reset();
+      submissionInput.value = '';
+      resetPhotoFields();
+      status.classList.remove('show');
+      showSuccess();
+    }, 900);
   });
 })();
 
