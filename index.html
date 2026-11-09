@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
-<!-- Apps Script endpoint: __REPORT_ENDPOINT__ -->
+<!-- Apps Script endpoint: https://script.google.com/macros/s/AKfycbylsyYxkZJxwFx8vqIcOCi-i_3lMEDIOorS6j_jtlI-_2jIOfOeIGxgF7Mr_Vg5A-rvEg/exec -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>التقرير الإعلامي لتنفيذ مشروع بارع ٢ | جمعية آفاق الخير الشبابية</title>
@@ -623,7 +623,7 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
 <section class="application-section" id="report-form">
   <div class="application-shell report-wrap" id="reportWrap">
     <div class="report-form-wrap">
-      <form class="application-form" id="mediaReportForm" action="__REPORT_ENDPOINT__" method="post" target="reportSubmitFrame">
+      <form class="application-form" id="mediaReportForm" action="https://script.google.com/macros/s/AKfycbylsyYxkZJxwFx8vqIcOCi-i_3lMEDIOorS6j_jtlI-_2jIOfOeIGxgF7Mr_Vg5A-rvEg/exec" method="post" target="reportSubmitFrame">
 
         <div class="question-card full">
           <label class="question-label" for="jiha">الجهة <span class="required">*</span></label>
@@ -670,14 +670,14 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
         </div>
 
         <div class="question-card full">
-          <label class="question-label" for="participantsCount">عدد المشاركين</label>
-          <input class="form-control" id="participantsCount" name="participantsCount" type="text" inputmode="numeric">
+          <label class="question-label" for="participantsCount">عدد المشاركين <span class="required">*</span></label>
+          <input class="form-control" id="participantsCount" name="participantsCount" type="text" inputmode="numeric" required>
         </div>
 
         <div class="form-section-title">صور التقرير الإعلامي</div>
 
           <div class="question-card full">
-            <label class="question-label" for="photo1">الصورة الأولى</label>
+            <label class="question-label" for="photo1">الصورة الأولى <span class="required">*</span></label>
             <label class="photo-field" id="photoField1" for="photo1">
               <span class="photo-field-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg></span>
               <img class="photo-thumb" id="photoThumb1" alt="">
@@ -690,7 +690,7 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
           </div>
 
           <div class="question-card full">
-            <label class="question-label" for="photo2">الصورة الثانية</label>
+            <label class="question-label" for="photo2">الصورة الثانية <span class="required">*</span></label>
             <label class="photo-field" id="photoField2" for="photo2">
               <span class="photo-field-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg></span>
               <img class="photo-thumb" id="photoThumb2" alt="">
@@ -703,7 +703,7 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
           </div>
 
           <div class="question-card full">
-            <label class="question-label" for="photo3">الصورة الثالثة</label>
+            <label class="question-label" for="photo3">الصورة الثالثة <span class="required">*</span></label>
             <label class="photo-field" id="photoField3" for="photo3">
               <span class="photo-field-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg></span>
               <img class="photo-thumb" id="photoThumb3" alt="">
@@ -716,7 +716,7 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
           </div>
 
           <div class="question-card full">
-            <label class="question-label" for="photo4">الصورة الرابعة</label>
+            <label class="question-label" for="photo4">الصورة الرابعة <span class="required">*</span></label>
             <label class="photo-field" id="photoField4" for="photo4">
               <span class="photo-field-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg></span>
               <img class="photo-thumb" id="photoThumb4" alt="">
@@ -871,7 +871,7 @@ function resizeImageForUpload(file, maxDim, quality, cb){
   if(!wrap || !form || !submissionInput) return;
 
   var submitBtn = form.querySelector('.form-submit');
-  var endpoint = '__REPORT_ENDPOINT__';
+  var endpoint = 'https://script.google.com/macros/s/AKfycbylsyYxkZJxwFx8vqIcOCi-i_3lMEDIOorS6j_jtlI-_2jIOfOeIGxgF7Mr_Vg5A-rvEg/exec';
   var activeSubmissionId = '';
   var pollCount = 0;
   var maxPolls = 40;
@@ -1000,7 +1000,25 @@ function resizeImageForUpload(file, maxDim, quality, cb){
     document.head.appendChild(script);
   }
 
+  function missingPhotos(){
+    var missing = [];
+    [1,2,3,4].forEach(function(idx){
+      var dataInput = document.getElementById('photo' + idx + 'Data');
+      if(!dataInput || !dataInput.value) missing.push(idx);
+    });
+    return missing;
+  }
+
   form.addEventListener('submit', function(e){
+    var missing = missingPhotos();
+    if(missing.length){
+      e.preventDefault();
+      showStatus('يرجى إرفاق الصور الأربع كاملة قبل الإرسال.');
+      var firstField = document.getElementById('photoField' + missing[0]);
+      if(firstField) firstField.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
     if(!form.checkValidity()){
       e.preventDefault();
       form.reportValidity();
