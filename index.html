@@ -587,6 +587,7 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
   .success-again,.success-home{width:100%}
   .photo-field-text{white-space:normal}
 }
+.header-inner{grid-template-columns:1fr auto}
 
 </style>
 </head>
@@ -635,10 +636,13 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
             <option value="ابن المبارك الافتراضي">ابن المبارك الافتراضي</option>
             <option value="السلام">السلام</option>
             <option value="خالد بن الوليد">خالد بن الوليد</option>
-            <option value="التقوى">التقوى</option>
             <option value="الملك عبدالله - النزلة">الملك عبدالله - النزلة</option>
-            <option value="جمعية تاج بتربة">جمعية تاج بتربة</option>
           </select>
+        </div>
+
+        <div class="question-card full">
+          <label class="question-label" for="teacherName">اسم المعلم <span class="required">*</span></label>
+          <input class="form-control" id="teacherName" name="teacherName" type="text" required>
         </div>
 
         <div class="question-card full">
@@ -726,6 +730,15 @@ html[data-theme="dark"] .form-submit:focus-visible{outline-color:#fff}
             <input type="hidden" id="photo4Data" name="photo4">
             <input type="hidden" id="photo4Name" name="photo4Name">
           </div>
+        <div class="form-section-title">اللقاء القادم</div>
+        <div class="question-card full">
+          <label class="question-label" for="nextTitle">عنوان اللقاء القادم <span class="required">*</span></label>
+          <input class="form-control" id="nextTitle" name="nextTitle" type="text" required>
+        </div>
+        <div class="question-card full">
+          <label class="question-label" for="nextDate">تاريخ إقامة اللقاء القادم <span class="required">*</span></label>
+          <input class="form-control" id="nextDate" name="nextDate" type="date" required>
+        </div>
         <p class="photo-processing" id="photoProcessing" style="display:none;grid-column:1/-1">جاري تجهيز الصور...</p>
 
         <input type="hidden" id="clientSubmissionId" name="clientSubmissionId" value="">
